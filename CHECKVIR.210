@@ -1,0 +1,257 @@
+   ' =============================================================
+   ' CHECKVIR -- ver 2.10 (c) 1991 GABI MARTI & MICRO. Inform…tica
+   ' =============================================================
+   ' Programa que compara el espai de memoria cada vegada
+   ' que arrenca per evitar infeccions de virus.
+   ' ATENCIO!! necessita trobar el COMMAND.COM al mateix directori.
+10 CLS
+20 LOCATE 1, 1: PRINT "ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿"
+30 LOCATE 2, 1: PRINT "³"; : COLOR 0, 7
+   PRINT " Checkvir   v 2.10 ç  (Beta)          (c)1991 MICRO. Inform…tica Calella S.L. ";
+   COLOR 7, 0: PRINT "³"
+40 LOCATE 3, 1:   PRINT "ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´"
+50 LOCATE 4, 1:   PRINT "³                                 Valores     Estado          Mensaje          ³"
+60 LOCATE 5, 1:   PRINT "³ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿³"
+70 LOCATE 6, 1:   PRINT "³³ MEMORIA RAM TOTAL úúúúúúúú ³            ³          ³                       ³³"
+80 LOCATE 7, 1:   PRINT "³³ CRC #1 úúúúúúúúúúúúúúúúúúú ³            ³          ³                       ³³"
+90 LOCATE 8, 1:   PRINT "³³ CRC #2 úúúúúúúúúúúúúúúúúúú ³            ³          ³                       ³³"
+100 LOCATE 9, 1:  PRINT "³³ LONGITUD COMMAND.COM úúúúú ³            ³          ³                       ³³"
+110 LOCATE 10, 1: PRINT "³³ LONGITUD CHECKVIR.EXE úúúú ³            ³          ³                       ³³"
+120 LOCATE 11, 1: PRINT "³³ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ³            ³          ³                       ³³"
+130 LOCATE 12, 1: PRINT "³³ TABLA VECTORES INTERRUPCION³            ³          ³                       ³³"
+140 LOCATE 13, 1: PRINT "³³ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ³            ³          ³                       ³³"
+150 LOCATE 14, 1: PRINT "³³                            ³            ³          ³                       ³³"
+160 LOCATE 15, 1: PRINT "³³                            ³            ³          ³                       ³³"
+170 LOCATE 16, 1: PRINT "³³                            ³            ³          ³                       ³³"
+180 LOCATE 17, 1: PRINT "³³                            ³            ³          ³                       ³³"
+190 LOCATE 18, 1: PRINT "³³                            ³            ³          ³                       ³³"
+200 LOCATE 19, 1: PRINT "³³                            ³            ³          ³                       ³³"
+210 LOCATE 20, 1: PRINT "³³ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ³            ³          ³                       ³³"
+220 LOCATE 21, 1: PRINT "³³                            ³            ³          ³                       ³³"
+230 LOCATE 22, 1: PRINT "³ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ³"
+240 LOCATE 23, 1: PRINT "ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ";
+    COLOR 0, 7
+    LOCATE 24, 1: PRINT SPACE$(80);
+    COLOR 7, 0
+   PRO$ = "GABI MARTI I FUENTES (c)1991"
+   AUT$ = "MICRO. Inform…tica Calella S.L."
+   IF LCASE$(LEFT$(AUT$, 1)) <> "m" THEN GOTO ERRR
+   IF MID$(AUT$, 6, 1) <> "." THEN GOTO ERRR
+   IF MID$(AUT$, 14, 1) <> "…" THEN GOTO ERRR
+   IF LEFT$(PRO$, 1) <> "G" OR MID$(PRO$, 12, 1) <> "I" THEN GOTO ERRR
+   GOSUB FITXER.COMPROBACIO
+   DEF SEG = 0
+   MKB = PEEK(&H413) + 256 * PEEK(&H414)
+   CR1 = FRE(0)
+   CR2 = FRE(-1)
+   OPEN "COMMAND.COM" FOR INPUT AS #1
+    LCO = LOF(1)
+   CLOSE #1
+   OPEN "CHECKVIR.EXE" FOR INPUT AS #1
+    LCH = LOF(1)
+   CLOSE #1
+   VIRUS% = 0
+   IF MEMKB = MKB THEN OK1$ = " CORRECTO" ELSE OK1$ = "INCORRECTO": VIRUS% = 1
+   IF CRC1 = CR1 THEN OK2$ = " CORRECTO" ELSE OK2$ = "INCORRECTO": VIRUS% = 2
+   IF CRC2 = CR2 THEN OK3$ = " CORRECTO" ELSE OK3$ = "INCORRECTO": VIRUS% = 3
+   IF LCOM = LCO THEN OK5$ = " CORRECTO" ELSE OK5$ = "INCORRECTO": VIRUS% = 4
+   IF LCHE = LCH THEN OK6$ = " CORRECTO" ELSE OK6$ = "INCORRECTO": VIRUS% = 5
+  
+   LOCATE 6, 33: PRINT USING "###,###"; MKB; : PRINT " Kb"; : LOCATE 6, 45: PRINT OK1$
+   LOCATE 7, 33: PRINT USING "###,###"; CR1; : LOCATE 7, 45: PRINT OK2$
+   LOCATE 8, 33: PRINT USING "###,###"; CR2; : LOCATE 8, 45: PRINT OK3$
+   LOCATE 9, 33: PRINT USING "###,###"; LCO; : LOCATE 9, 45: PRINT OK5$
+   LOCATE 10, 33: PRINT USING "###,###"; LCH; : LOCATE 10, 45: PRINT OK6$
+   GOSUB COMPROVA.INT
+   GOSUB CHECKFIL
+   COLOR 0, 7
+   LOCATE 24, 1: PRINT SPACE$(80);
+   IF VIRUS% > 0 THEN
+      LOCATE 24, 5: PRINT SPACE$(8) + "Posible infecci¢n v¡rica.    Avisar al tel‚fono 769.43.12";
+   ELSE
+      LOCATE 24, 5: PRINT " Sistema correcto.   Pulse una tecla para salir ... ";
+   END IF
+   COLOR 7, 0
+   K$ = INPUT$(1)
+   END
+ERRR:
+   CLS
+   PRINT "Packed file is corrupt ..."
+   PRINT "Ä-Ä-Ä-Ä-Ä-Ä-Ä-Ä-Ä-Ä-Ä-Ä-Ä-"
+   PRINT CHR$(7); CHR$(7); CHR$(7); CHR$(7);
+   END
+
+FITXER.COMPROBACIO:
+   OPEN "CHECKVIR.CRC" FOR RANDOM AS #1
+   IF LOF(1) = 0 THEN GOSUB CREA.CRC
+   CLOSE
+   OPEN "CHECKVIR.CRC" FOR INPUT AS #1
+    INPUT #1, MEMKB
+    INPUT #1, CRC1
+    INPUT #1, CRC2
+    INPUT #1, LCOM
+    INPUT #1, LCHE
+   CLOSE #1
+   OPEN "CHECKVIR.INT" FOR RANDOM AS #1
+   IF LOF(1) = 0 THEN GOSUB CREA.INT
+   CLOSE #1
+RETURN
+
+CREA.INT:
+   CLOSE #1
+   COLOR 0, 7
+   LOCATE 24, 1: PRINT " Creaci¢n fichero vectores interrupci¢n ..."; CHR$(7);
+   COLOR 7, 0
+   OPEN "CHECKVIR.INT" FOR OUTPUT AS #1
+   FOR I% = &H0 TO &H77
+       COLOR 0, 7
+       LOCATE 24, 65: PRINT HEX$(I%);
+       COLOR 7, 0
+       DEF SEG = 0
+       VL1% = PEEK(I%)
+       VL2% = PEEK(I% + 1)
+       VL3% = PEEK(I% + 2)
+       VL4% = PEEK(I% + 3)
+       PRINT #1, VL1%
+       PRINT #1, VL2%
+       PRINT #1, VL3%
+       PRINT #1, VL4%
+   NEXT I%
+   CLOSE #1
+RETURN
+
+CREA.CRC:
+   CLOSE #1
+   COLOR 0, 7
+   LOCATE 24, 1: PRINT " Creaci¢n del fichero de comprobaci¢n ..."; CHR$(7);
+   COLOR 7, 0
+   DEF SEG = 0
+   MEMKB = PEEK(&H413) + 256 * PEEK(&H414)
+   CRC1 = FRE(0)
+   CRC2 = FRE(-1)
+   OPEN "COMMAND.COM" FOR INPUT AS #1
+    LCOM = LOF(1)
+   CLOSE #1
+   OPEN "CHECKVIR.EXE" FOR INPUT AS #1
+    LCHE = LOF(1)
+   CLOSE #1
+   OPEN "CHECKVIR.CRC" FOR OUTPUT AS #1
+    PRINT #1, MEMKB
+    PRINT #1, CRC1
+    PRINT #1, CRC2
+    PRINT #1, LCOM
+    PRINT #1, LCHE
+   CLOSE #1
+RETURN
+
+CHECKFIL:
+   OPEN "CHECKVIR.FIL" FOR RANDOM AS #2
+   LF% = LOF(2)
+   CLOSE
+   IF LF% > 0 THEN
+      GOTO LLEGIR
+   ELSE
+      RETURN
+   END IF
+LLEGIR:
+   OPEN "CHECKVIR.LON" FOR RANDOM AS #3
+   LF% = LOF(3)
+   CLOSE
+   IF LF% = 0 THEN
+      OPEN "CHECKVIR.LON" FOR OUTPUT AS #3
+      OPEN "CHECKVIR.FIL" FOR INPUT AS #2
+            DO WHILE NOT EOF(2)
+               INPUT #2, FI$
+               OPEN FI$ FOR INPUT AS #4
+               LF = LOF(4)
+               CLOSE 4
+               PRINT #3, LF
+            LOOP
+      CLOSE
+   END IF
+   OPEN "CHECKVIR.FIL" FOR INPUT AS #2
+   OPEN "CHECKVIR.LON" FOR INPUT AS #3
+        DO WHILE NOT EOF(2)
+           INPUT #2, FI$
+           INPUT #3, LO
+           OPEN FI$ FOR INPUT AS #4
+           LF = LOF(4)
+           LOCATE 21, 3: PRINT SPACE$(28);
+           LOCATE 21, 3: PRINT FI$;
+           LOCATE 21, 33: PRINT USING "###,###"; LF;
+           SOUND 2900, .025
+           SOUND 3400, .025
+           CLOSE 4
+           LOCATE 21, 45
+           IF LF = LO THEN PRINT " CORRECTO " ELSE PRINT CHR$(7); "INCORRECTO": VIRUS% = 6: EXIT DO
+        LOOP
+   CLOSE
+RETURN
+
+COMPROVA.INT:
+   COLOR 0, 7
+   LOCATE 24, 1: PRINT SPACE$(80);
+   COLOR 7, 0
+   CLOSE #1
+   OPEN "CHECKVIR.INT" FOR INPUT AS #1
+   LIN% = 14
+   FOR I% = &H0 TO &H77
+       IF LIN% > 19 THEN
+          FOR X% = 14 TO 19
+              LOCATE X%, 3: PRINT SPACE$(28)
+              LOCATE X%, 33: PRINT SPACE$(8)
+              LOCATE X%, 45: PRINT SPACE$(10)
+          NEXT X%
+          LIN% = 14
+       END IF
+       INPUT #1, FC1%
+       INPUT #1, FC2%
+       INPUT #1, FC3%
+       INPUT #1, FC4%
+       DEF SEG = 0
+       VL1% = PEEK(I%)
+       VL2% = PEEK(I% + 1)
+       VL3% = PEEK(I% + 2)
+       VL4% = PEEK(I% + 3)
+       READ IN$
+       LOCATE LIN%, 3: PRINT HEX$(I%); " "; IN$
+       LOCATE LIN%, 33: PRINT HEX$(FC1%); HEX$(FC2%); HEX$(FC3%); HEX$(FC4%)
+       LOCATE LIN%, 45
+       IF VL1% <> FC1% OR VL2% <> FC2% OR VL3% <> FC3% OR VL4% <> FC4% THEN
+           PRINT "INCORRECTO"; : SOUND 3600, .2: SOUND 600, .2: VIRUS% = 7
+       ELSE
+           PRINT " CORRECTO "
+       END IF
+       LIN% = LIN% + 1
+   NEXT I%
+   CLOSE #1
+RETURN
+ 
+DATA DIVISION POR CERO, PASO A PASO, NMI, RUPTURA, DESBORDAMIENTO, PrtSc
+DATA RESERVADA, RESERVADA, IRQ0, IRQ1, IRQ2, IRQ3, IRQ4, IRQ5, IRQ6, IRQ7
+DATA VIDEO BIOS, EQUIPO BIOS, TAMA¥O BIOS, DISCO BIOS, COMUNICACIONES BIOS
+DATA E/S BIOS, TECLADO BIOS, IMPRESORA BIOS, BASIC, LOAD BIOS
+DATA HORA BIOS, BREAK BIOS, TEMPORIZADOR BIOS, PARAMETROS BIOS, FLOPPY BIOS
+DATA CARACTERES BIOS, FIN PROCESO DOS, FUNCIONES DOS, ADR. FIN DOS
+DATA CTRL-C DOS, ERROR DOS, LECTURA DISCO DOS, ESCRITURA DISCO DOS
+DATA RESIDENTE DOS, ESPERA DOS, RESERVADA DOS, RED DOS
+DATA RESERVADA DOS, RESERVADA DOS, RESERVADA DOS, RESERVADA DOS
+DATA MULTIPLEX DOS
+DATA RESERVADA DOS, RESERVADA DOS, RESERVADA DOS, RESERVADA DOS
+DATA RESERVADA DOS, RESERVADA DOS, RESERVADA DOS, RESERVADA DOS
+DATA RESERVADA DOS, RESERVADA DOS, RESERVADA DOS, RESERVADA DOS
+DATA RESERVADA DOS, RESERVADA DOS, RESERVADA DOS, RESERVADA DOS
+DATA FLOPPY BIOS, HARD DISK BIOS, EGA BIOS
+DATA TABLA EGA BIOS, CARACTERES BIOS, N/D, PARM. HD BIOS
+DATA N/D, N/D, N/D, ALARMA BIOS
+DATA N/D, N/D, N/D, N/D, N/D
+DATA N/D, N/D, N/D, N/D, N/D
+DATA N/D, N/D, N/D, N/D, N/D
+DATA ADAPTADOR BLOQUES, PROGRAMA BLOQUES
+DATA N/D, N/D, N/D, N/D
+DATA USUARIO, USUARIO, USUARIO, USUARIO, USUARIO, USUARIO, USUARIO
+DATA DRIVER LIM EMS
+DATA N/D, N/D, N/D, N/D, N/D, N/D, N/D, N/D
+DATA IRQ8, IRQ9 A IRQ2, IRQ10, IRQ11, IRQ12
+DATA IRQ13, IRQ14, RESERVADO IRQ15
+

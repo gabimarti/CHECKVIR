@@ -1,0 +1,76 @@
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ 
+³*  C H E C K V I R  *³     (C)1991 MICRO. Inform…tica Calella S.L. 
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+
+  BREVE DESCRIPCION
+  ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+        CHECKVIR es una utilidad NO RESIDENTE, que comprueba el estado del
+  sistema cada vez que se ejecuta, compar ndolo con unos ficheros patr¢n que 
+  se crean la primera vez que se ejecuta. 
+  Esto sirve para detectar la presencia de programas v¡ricos en memoria.
+  CHECKVIR ha sido especialmente dise¤ado para detectar y eliminar los virus
+  del tipo BOOT, y TABLA DE PARTICIONES, como pueden ser el STONED o el 
+  ANTI CTNE, etc.
+  
+  INSTALACION
+  ÄÄÄÄÄÄÄÄÄÄÄ
+        Es importante que cuando se efectue la instalaci¢n que se est‚
+  seguro de que el ordenador no est  infectado ya que en caso contrario la
+  vacuna no tiene efecto.           
+  
+        La instalaci¢n de CHECKVIR es muy simple:
+   
+    - Copiar el fichero CHECKVIR.EXE al directorio ra¡z del disco duro.
+    - Asegurarse de que se encuentra el fichero COMMAND.COM en el direc-
+      torio ra¡z.
+    - Colocar la orden CHECKVIR como la primera instrucci¢n del fichero
+      AUTOEXEC.BAT. 
+    - Rearrancar el ordenador, y la primera vez crear  los ficheros de
+      control.
+    - Formatear un disco en la disketera A: con la opci¢n /S y copiar
+      los ficheros CHECKVIR.*  (este ser  el disco de RESCATE)
+        
+        Ahora ya est  instalado CHECKVIR. A partir de ese momento cada vez 
+  que se vuelva a arrancar el ordenador, CHECKVIR har  una comprobaci¢n de 
+  su sistema y siempre tiene que dar correcto. 
+
+  
+  DETECCION DE VIRUS
+  ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 
+        Los virus que detecta CHECKVIR son los que toman el control antes 
+  que el Sistema Operativo, ya que si es un virus del tipo que infectan 
+  ficheros .EXE ¢ .COM puede ser que no est‚ activo cuando arranque el 
+  ordenador. El mensaje m s frecuente en caso de infecci¢n por virus puede 
+  ser que indique una reducci¢n de la memoria total del sistema, y un error 
+  en el CRC #2. Puede que el BOOT o la MBR est‚n infectados pero debido a las
+  t‚cnicas que utilizan algunos virus puede dar CORRECTO. 
+  La manera de proceder en este caso es la siguiente:
+    - Parar el ordenador (no hacer RESET).
+    - Introducir un disco del S.O. en la disketera A: (del cual se est‚
+      seguro que no tiene virus) o el disco de RESCATE que se cre¢ cuando
+      se instal¢ CHECKVIR.
+    - ARRANCAR EL ORDENADOR
+    - Ejecutar CHECKVIR manualmente, y si hay alguna anomal¡a en el BOOT, o 
+      en la MBR el programa preguntar  si se quiere restaurar a partir de los
+      ficheros de control, a lo que se le contestar  que 'S' (si). 
+    - Volver a arrancar el ordenador pero esta vez desde disco duro, y
+      no tiene que producirse ningun error, por lo que se habr  eliminado
+      el virus.    
+     
+     
+  MUY IMPORTANTE
+  ÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+        Para evitar falsas alarmas, no ejecute nunca CHECKVIR directamente
+  desde la linea de comandos del DOS, ya que puede darles errores en el
+  CRC #2 y en los vectores de interrupci¢n, siendo esto normal. 
+        Para cerciorarse siempre de una posible infecci¢n, se debe parar el
+  ordenador y arrancarlo de nuevo para que vuelva a cargar el S.O. en las
+  mismas condiciones que cuando se instal¢ CHECKVIR por primera vez. 
+          
+                             
+  
+  
+                                        Calella, 22 de Agosto de 1991
+                                        MICRO. Inform…tica Calella S.L.
+                                        
